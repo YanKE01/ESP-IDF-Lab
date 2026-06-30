@@ -1,0 +1,17 @@
+menu "Simple download speed test"
+
+config SIMPLE_TEST_DOWNLOAD_URL
+    string "HTTP/HTTPS download speed test URL"
+    default "https://192.168.0.196:8443/download.bin"
+    help
+        URL used for the download speed test.
+
+config SIMPLE_TEST_DOWNLOAD_BUFFER_IN_PSRAM
+    bool "Allocate download buffer in PSRAM"
+    depends on SPIRAM
+    default y
+    help
+        Allocate the 32 KB esp_http_client_read buffer in PSRAM instead of
+        internal RAM. This is useful for comparing throughput and DRAM usage.
+
+endmenu
