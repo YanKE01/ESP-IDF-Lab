@@ -171,6 +171,10 @@ projects:
     idf_version: release-v5.5
     target: esp32s3
 
+  - path: examples/usb/device/usb_host_os_detect
+    idf_version: release-v5.5
+    target: esp32s3
+
   - path: examples/usb/host/msc_host
     idf_version: release-v5.5
     target: esp32s3
