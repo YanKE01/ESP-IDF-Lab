@@ -1,0 +1,25 @@
+# Build this example for ESP32-S3.
+CONFIG_IDF_TARGET="esp32s3"
+
+# ESP32-S3 early customer signal.
+CONFIG_EXAMPLE_EARLY_SIGNAL_GPIO=16
+CONFIG_EXAMPLE_EARLY_SIGNAL_LEVEL=1
+
+# Use a fast flash mode supported by common ESP32-S3 boards. Flash size is
+# intentionally left board-specific.
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+
+# Reduce startup log output while retaining warnings and errors.
+CONFIG_LOG_DEFAULT_LEVEL_WARN=y
+CONFIG_LOG_MAXIMUM_LEVEL_INFO=y
+CONFIG_BOOTLOADER_LOG_LEVEL_WARN=y
+
+# Skip the full application image validation only on power-on reset.
+CONFIG_BOOTLOADER_SKIP_VALIDATE_ON_POWER_ON=y
+
+# Skip RTC slow-clock calibration for minimum startup time.
+CONFIG_RTC_CLK_CAL_CYCLES=0
+
+# PSRAM is intentionally not enabled or linked into this minimal build, so its
+# initialization cannot delay application startup.

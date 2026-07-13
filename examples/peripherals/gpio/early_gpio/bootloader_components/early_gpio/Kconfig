@@ -1,0 +1,22 @@
+menu "ESP32-S3 early customer signal"
+    depends on IDF_TARGET_ESP32S3
+
+    config EXAMPLE_EARLY_SIGNAL_GPIO
+        int "Early signal GPIO number"
+        range 0 48
+        default 16
+        help
+            GPIO driven to the configured level at the earliest supported
+            second-stage bootloader hook. GPIO22 through GPIO25 are not valid
+            on ESP32-S3. Also avoid flash, PSRAM, strapping, console, and USB
+            pins used by the selected board.
+
+    config EXAMPLE_EARLY_SIGNAL_LEVEL
+        int "Active output level"
+        range 0 1
+        default 1
+        help
+            Output level driven by the early bootloader hook. Use 1 for an
+            active-high customer signal and 0 for active-low.
+
+endmenu

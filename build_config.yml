@@ -79,6 +79,10 @@ projects:
     idf_version: release-v5.5
     target: esp32s3
 
+  - path: examples/peripherals/gpio/early_gpio
+    idf_version: release-v5.5
+    target: esp32s3
+
   - path: examples/peripherals/gpio/gpio_flip
     idf_version: release-v5.5
     target: esp32s3
