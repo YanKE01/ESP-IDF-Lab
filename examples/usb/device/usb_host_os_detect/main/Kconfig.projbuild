@@ -1,0 +1,18 @@
+menu "USB Host OS Detect"
+
+    choice TINYUSB_RHPORT
+        prompt "TinyUSB PHY / root port"
+        default TINYUSB_RHPORT_HS if IDF_TARGET_ESP32P4
+        default TINYUSB_RHPORT_FS
+        help
+            Select the USB PHY used by TinyUSB. High Speed uses the USB OTG 2.0
+            (UTMI) PHY available on ESP32-P4; Full Speed uses the internal FS PHY
+            on ESP32-S2/S3.
+
+        config TINYUSB_RHPORT_HS
+            bool "High Speed"
+        config TINYUSB_RHPORT_FS
+            bool "Full Speed"
+    endchoice
+
+endmenu
