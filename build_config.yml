@@ -1,180 +1,53 @@
-projects:
-  - path: examples/algorithm/mfcc
-    idf_version: release-v5.5
-    target: esp32s3
+idf_version: release-v5.5
 
-  - path: examples/audio/esp_sr
-    idf_version: release-v5.5
-    target: esp32s3
+targets:
+  esp32s3:
+    - examples/algorithm/mfcc
+    - examples/audio/esp_sr
+    - examples/audio/max98357a
+    - examples/audio/record_play
+    - examples/audio/record_save
+    - examples/dl/boston_housing/esp_boston
+    - examples/dl/cifar10/esp_cifar10
+    - examples/dl/mnist/esp_mnist
+    - examples/dl/sin_wave_predict/esp_sin_wave_predict
+    - examples/http/esp_gpt
+    - examples/http/http_aliyun_tongyiqianwen
+    - examples/http/http_baidu_access_token
+    - examples/http/http_baidu_img_classification
+    - examples/http/http_baidu_speech_recognition
+    - examples/http/http_baidu_tts
+    - examples/http/http_kimi
+    - examples/http/http_xunfei_xinghuo
+    - examples/peripherals/can/can_alert
+    - examples/peripherals/can/can_simple_test
+    - examples/peripherals/gpio/gpio_flip
+    - examples/peripherals/i2c/i2c_bus
+    - examples/peripherals/lcd/lcd_jpg
+    - examples/peripherals/lcd/oled
+    - examples/peripherals/pcnt/basic_pcnt
+    - examples/peripherals/pwm/complementary_pwm
+    - examples/peripherals/rmt/rmt_simple_tx
+    - examples/peripherals/rmt/ws2812_simple_encoder
+    - examples/peripherals/spi/spi_basic
+    - examples/protocols/json
+    - examples/protocols/modbus/master/modbus_serial_master
+    - examples/protocols/modbus/slave/modbus_serial_slave
+    - examples/protocols/protobuf
+    - examples/protocols/protobuf_c
+    - examples/ui/lvgl/lcd_camera_lvgl
+    - examples/ui/lvgl/lvgl_spiffs
+    - examples/ui/wououi
+    - examples/usb/device/bulk_trans
+    - examples/usb/device/cdc_acm
+    - examples/usb/device/hid_device_audio_ctrl
+    - examples/usb/device/hid_device_keyboard
+    - examples/usb/device/win_usb
+    - examples/usb/host/msc_host
 
-  - path: examples/audio/max98357a
-    idf_version: release-v5.5
-    target: esp32s3
+  esp32p4:
+    - examples/peripherals/sdmmc/sdcard_performance
+    - examples/usb/device/mtp
 
-  - path: examples/audio/ns4150_player
-    idf_version: release-v5.5
-    target: esp32c5
-
-  - path: examples/audio/record_play
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/audio/record_save
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/dl/boston_housing/esp_boston
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/dl/cifar10/esp_cifar10
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/dl/mnist/esp_mnist
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/dl/sin_wave_predict/esp_sin_wave_predict
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/esp_gpt
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_aliyun_tongyiqianwen
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_baidu_access_token
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_baidu_img_classification
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_baidu_speech_recognition
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_baidu_tts
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_kimi
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/http/http_xunfei_xinghuo
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/can/can_alert
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/can/can_simple_test
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/gpio/gpio_flip
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/i2c/i2c_bus
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/lcd/lcd_jpg
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/lcd/oled
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/pcnt/basic_pcnt
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/pwm/complementary_pwm
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/rmt/rmt_simple_tx
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/rmt/ws2812_simple_encoder
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/peripherals/sdmmc/sdcard_performance
-    idf_version: release-v5.5
-    target: esp32p4
-
-  - path: examples/peripherals/spi/spi_basic
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/protocols/json
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/protocols/modbus/master/modbus_serial_master
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/protocols/modbus/slave/modbus_serial_slave
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/protocols/protobuf
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/protocols/protobuf_c
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/ui/lvgl/lcd_camera_lvgl
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/ui/lvgl/lvgl_spiffs
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/ui/wououi
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/bulk_trans
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/cdc_acm
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/hid_device_audio_ctrl
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/hid_device_keyboard
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/win_usb
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/device/usb_host_os_detect
-    idf_version: release-v5.5
-    target: esp32s3
-
-  - path: examples/usb/host/msc_host
-    idf_version: release-v5.5
-    target: esp32s3
+  esp32c5:
+    - examples/audio/ns4150_player

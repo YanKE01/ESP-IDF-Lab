@@ -1,67 +1,60 @@
 #include "hid_audio_ctrl.h"
-#include "tinyusb_types.h"
+
 #include "class/hid/hid_device.h"
-
-// 配置描述符+HID设备数量*(接口描述符+HID描述符+端点描述符)
-#define TUSB_DESC_TOTAL_LEN (TUD_CONFIG_DESC_LEN + CFG_TUD_HID * TUD_HID_DESC_LEN)
+#include "tusb.h"
 
 /**
- * @brief examples/usb/hid_device_audio_ctrl/managed_components/espressif__esp_tinyusb/usb_descriptors.c
+ * @brief Handles an HID GET_REPORT request received on the control endpoint.
  *
+ * This example does not support GET_REPORT, so returning zero causes TinyUSB
+ * to stall the control request.
  */
-const char *hid_device_audio_string_descriptor[5] = {
-    // array of pointer to string descriptors
-    (char[]){0x09, 0x04}, /*!< support language is english */
-    "TinyUSB",            /*!< manufacturer */
-    "TinyUSB Device",     /*!< product */
-    "123456",             /*!< chip id */
-    "Example HID interface",
-};
-
-/**
- * @brief device descriptor
- *
- */
-tusb_desc_device_t hid_aduio_device_descriptor = {
-    .bLength = sizeof(hid_aduio_device_descriptor),
-    .bDescriptorType = 0x01, // usb2.0 pdf 5.4.1.2
-    .bcdUSB = 0x0200,
-    .bDeviceClass = 0X00, // 类别在接口描述符中定义
-    .bDeviceSubClass = 0x00,
-    .bDeviceProtocol = 0x00,
-    .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
-
-    .idVendor = 0x303A,         // 厂商ID espressif
-    .idProduct = 0x00,          // 产品ID
-    .bcdDevice = 0x00,          // 设备版本号,1.00版本
-    .iManufacturer = 0x01,      // 厂商字符串索引，string descriptor中的索引
-    .iProduct = 0x02,           // 产品字符串索引
-    .iSerialNumber = 0x03,      // 产品序列号索引
-    .bNumConfigurations = 0x01, // 配置描述符个数，1个
-};
-
-/**
- * @brief 报告描述符
- *
- */
-const uint8_t hid_device_audio_ctrl_report_descriptor[] = {
-    TUD_HID_REPORT_DESC_CONSUMER(HID_REPORT_ID(2)),
-};
-
-/**
- * @brief 配置描述符
- *
- */
-const uint8_t hid_device_audio_configuration_descriptor[] = {
-    TUD_CONFIG_DESCRIPTOR(1, 1, 0, TUSB_DESC_TOTAL_LEN, TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP, 100),
-    TUD_HID_DESCRIPTOR(0, 0, false, sizeof(hid_device_audio_ctrl_report_descriptor), 0x81, CFG_TUD_HID_EP_BUFSIZE, 5),
-};
-
-bool hid_device_audio_ctrl()
+uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t *buffer, uint16_t reqlen)
 {
-    uint16_t data = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
-    tud_hid_report(2, &data, sizeof(data));
-    vTaskDelay(10 / portTICK_PERIOD_MS);
-    data = 0;
-    return tud_hid_report(2, &data, 2);
+    (void)instance;
+    (void)report_id;
+    (void)report_type;
+    (void)buffer;
+    (void)reqlen;
+    return 0;
+}
+
+/**
+ * @brief Handles an HID SET_REPORT request or data received on an OUT endpoint.
+ *
+ * This Consumer Control interface has no OUT endpoint and ignores SET_REPORT.
+ */
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer, uint16_t bufsize)
+{
+    (void)instance;
+    (void)report_id;
+    (void)report_type;
+    (void)buffer;
+    (void)bufsize;
+}
+
+bool hid_device_audio_ctrl(void)
+{
+    if (!tud_hid_ready()) {
+        return false;
+    }
+
+    uint16_t usage = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
+    return tud_hid_report(0, &usage, sizeof(usage));
+}
+
+/**
+ * @brief Sends the release report after a Consumer Control report completes.
+ *
+ * The interface has no Report ID, so the two report bytes contain the Consumer
+ * Control usage. A zero usage releases the previously pressed media key.
+ */
+void tud_hid_report_complete_cb(uint8_t instance, uint8_t const *report, uint16_t len)
+{
+    (void)instance;
+
+    if (len == sizeof(uint16_t) && (report[0] != 0 || report[1] != 0)) {
+        uint16_t usage = 0;
+        tud_hid_report(0, &usage, sizeof(usage));
+    }
 }

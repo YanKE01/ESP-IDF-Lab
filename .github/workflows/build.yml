@@ -1,44 +1,64 @@
-name: Build with ESP-IDF
+name: Build ESP-IDF projects
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: ESP chip target to build
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - esp32s3
+          - esp32p4
+          - esp32c5
 
 jobs:
-  build:
+  prepare:
+    name: Prepare build matrix
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'true'
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      - name: Install dependencies
+          python-version: "3.10"
+
+      - name: Install configuration dependency
+        run: python -m pip install pyyaml
+
+      - name: Generate build matrix
+        id: matrix
+        env:
+          SELECTED_TARGET: ${{ inputs.target || 'all' }}
         run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml
-      - name: Build projects
-        shell: bash
-        run: |
-          # Read the configuration file
-          while IFS= read -r line; do
-            if [[ $line =~ path:[[:space:]]*([^[:space:]]+) ]]; then
-              project_path="${BASH_REMATCH[1]}"
-            elif [[ $line =~ idf_version:[[:space:]]*([^[:space:]]+) ]]; then
-              idf_version="${BASH_REMATCH[1]}"
-            elif [[ $line =~ target:[[:space:]]*([^[:space:]]+) ]]; then
-              target="${BASH_REMATCH[1]}"
-              if [ ! -z "$project_path" ] && [ ! -z "$idf_version" ] && [ ! -z "$target" ]; then
-                echo "Building $project_path with IDF $idf_version for $target"
-                docker run --rm -v $PWD:/workspace -w /workspace espressif/idf:$idf_version bash -c "
-                  . ${IDF_PATH}/export.sh
-                  cd $project_path
-                  idf.py set-target $target
-                  idf.py build
-                "
-                project_path=""
-                idf_version=""
-                target=""
-              fi
-            fi
-          done < build_config.yml
+          matrix="$(python tools/ci/generate_build_matrix.py --target "$SELECTED_TARGET")"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "$matrix" | python -m json.tool
+
+  build:
+    name: ${{ matrix.target }} · ${{ matrix.path }}
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build project
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: ${{ matrix.idf_version }}
+          target: ${{ matrix.target }}
+          path: ${{ matrix.path }}

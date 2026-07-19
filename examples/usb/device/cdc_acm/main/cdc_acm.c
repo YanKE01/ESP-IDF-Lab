@@ -14,7 +14,10 @@ static void usb_phy_init(void)
     usb_phy_config_t phy_conf = {
         .controller = USB_PHY_CTRL_OTG,
         .otg_mode = USB_OTG_MODE_DEVICE,
-        .target = USB_PHY_TARGET_INT
+        .target = USB_PHY_TARGET_INT,
+#if CONFIG_TINYUSB_RHPORT_HS
+        .otg_speed = USB_PHY_SPEED_HIGH,
+#endif
     };
     usb_new_phy(&phy_conf, &phy_hdl);
 }
@@ -47,26 +50,38 @@ void tud_resume_cb(void)
     ESP_LOGI(TAG, "USB resumed");
 }
 
-void tud_cdc_task(void *arg)
+static void cdc_handle_rx(uint8_t itf)
 {
+    uint8_t buf[CFG_TUD_CDC_RX_BUFSIZE];
+
+    while (tud_cdc_n_available(itf)) {
+        uint32_t len = tud_cdc_n_read(itf, buf, sizeof(buf));
+        ESP_LOGI(TAG, "Received %lu bytes", (unsigned long)len);
+        ESP_LOG_BUFFER_HEXDUMP(TAG, buf, len, ESP_LOG_INFO);
+        tud_cdc_n_write(itf, buf, len);
+    }
+
+    tud_cdc_n_write_flush(itf);
+}
+
+#if CONFIG_CDC_ACM_RX_MODE_POLLING
+static void tud_cdc_task(void *arg)
+{
+    (void)arg;
+
     while (1) {
-        if (tud_cdc_available()) {
-            uint8_t buf[64];
-            int len = tud_cdc_read(buf, sizeof(buf));
-            if (len > 0) {
-                ESP_LOGI(TAG, "Received %d bytes", len);
-                tud_cdc_write(buf, len);
-                tud_cdc_write_flush();
-            }
-        }
+        cdc_handle_rx(0);
         vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
+#endif
 
+#if CONFIG_CDC_ACM_RX_MODE_CALLBACK
 void tud_cdc_rx_cb(uint8_t itf)
 {
-    (void) itf;
+    cdc_handle_rx(itf);
 }
+#endif
 
 void app_main(void)
 {
@@ -76,5 +91,7 @@ void app_main(void)
         return;
     }
     xTaskCreate(tusb_device_task, "tusb_device_task", 4096, NULL, 5, NULL);
+#if CONFIG_CDC_ACM_RX_MODE_POLLING
     xTaskCreate(tud_cdc_task, "tud_cdc_task", 5 * 1024, NULL, 5, NULL);
+#endif
 }

@@ -1,4 +1,4 @@
-idf_component_register(SRCS "main.c" "app_usb/hid_audio_ctrl.c" INCLUDE_DIRS "." "app_usb/include")
+idf_component_register(SRCS "mtp.c" "mtp_state.c" "mtp_storage.c" "spiffs_storage.c" INCLUDE_DIRS "." "include" PRIV_REQUIRES spiffs usb)
 
 idf_build_get_property(build_components BUILD_COMPONENTS)
 if(tinyusb IN_LIST build_components)
