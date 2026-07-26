@@ -1,0 +1,46 @@
+menu "USB MTP Configuration"
+
+    choice TINYUSB_RHPORT
+        prompt "TinyUSB root port"
+        default TINYUSB_RHPORT_HS if IDF_TARGET_ESP32P4
+        default TINYUSB_RHPORT_FS
+        help
+            Select the USB controller and PHY used by TinyUSB. ESP32-S3 uses
+            the internal Full-Speed PHY. ESP32-P4 supports both Full-Speed
+            and High-Speed operation.
+
+        config TINYUSB_RHPORT_HS
+            bool "High Speed"
+            depends on IDF_TARGET_ESP32P4
+            help
+                Use the ESP32-P4 USB 2.0 High-Speed controller and UTMI PHY.
+
+        config TINYUSB_RHPORT_FS
+            bool "Full Speed"
+            help
+                Use the internal USB Full-Speed PHY.
+    endchoice
+
+    config MTP_MAX_FILE_COUNT
+        int "Maximum MTP file count"
+        default 32
+        range 1 120
+        help
+            Maximum number of SPIFFS files exposed as MTP objects. The upper
+            limit keeps the complete object handle array inside one MTP buffer.
+
+    config MTP_SPIFFS_MAX_OPEN_FILES
+        int "Maximum open SPIFFS files"
+        default 4
+        range 2 16
+        help
+            Maximum number of files that can be opened through the SPIFFS VFS.
+
+    config MTP_SPIFFS_FORMAT_IF_MOUNT_FAILED
+        bool "Format SPIFFS if mounting fails"
+        default y
+        help
+            Format the storage partition when it cannot be mounted. Existing
+            files in an incompatible or damaged filesystem will be erased.
+
+endmenu

@@ -1,0 +1,24 @@
+menu "USB HID Keyboard Configuration"
+
+    choice TINYUSB_RHPORT
+        prompt "TinyUSB root port"
+        default TINYUSB_RHPORT_HS if IDF_TARGET_ESP32P4
+        default TINYUSB_RHPORT_FS
+        help
+            Select the USB controller and PHY used by TinyUSB. ESP32-S3 uses
+            the internal Full-Speed PHY. ESP32-P4 supports both Full-Speed
+            and High-Speed operation.
+
+        config TINYUSB_RHPORT_HS
+            bool "High Speed"
+            depends on IDF_TARGET_ESP32P4
+            help
+                Use the ESP32-P4 USB 2.0 High-Speed controller and UTMI PHY.
+
+        config TINYUSB_RHPORT_FS
+            bool "Full Speed"
+            help
+                Use the internal USB Full-Speed PHY.
+    endchoice
+
+endmenu

@@ -1,0 +1,35 @@
+menu "USB Device Configuration"
+
+    choice TINYUSB_RHPORT
+        prompt "TinyUSB Root Port"
+        default TINYUSB_RHPORT_HS if IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31
+        default TINYUSB_RHPORT_FS
+        help
+            Allows set the USB PHY Controller for TinyUSB: HS (USB OTG2.0 PHY for HighSpeed)
+
+        config TINYUSB_RHPORT_HS
+            depends on IDF_TARGET_ESP32P4 || IDF_TARGET_ESP32S31
+            bool "High Speed"
+
+        config TINYUSB_RHPORT_FS
+            bool "Full Speed"
+    endchoice
+
+    choice CDC_ACM_RX_MODE
+        prompt "CDC RX handling mode"
+        default CDC_ACM_RX_MODE_POLLING
+        help
+            Select how the application is notified of received CDC data.
+
+        config CDC_ACM_RX_MODE_POLLING
+            bool "Polling task"
+            help
+                Periodically check the CDC RX FIFO from a dedicated FreeRTOS task.
+
+        config CDC_ACM_RX_MODE_CALLBACK
+            bool "TinyUSB receive callback"
+            help
+                Process CDC data when TinyUSB invokes tud_cdc_rx_cb().
+    endchoice
+
+endmenu

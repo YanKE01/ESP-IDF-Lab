@@ -1,6 +1,8 @@
-# ESP Demos
+# ESP-IDF Lab
 
-`esp_demos` is a project for learning various ESP32 features and interesting demos. This project is built on the release version of IDF Release V5.5.
+[English](README.md) | [简体中文](README_CN.md)
+
+`esp-idf-lab` is a collection of practical experiments and reference projects for learning ESP chip features with ESP-IDF. This project is built on ESP-IDF Release V5.5.
 
 ## Project Capabilities
 

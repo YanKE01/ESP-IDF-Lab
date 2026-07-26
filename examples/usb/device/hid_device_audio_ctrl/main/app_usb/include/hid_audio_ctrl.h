@@ -1,16 +1,10 @@
 #pragma once
 
-#include "tinyusb.h"
-
-extern const char *hid_device_audio_string_descriptor[5];
-extern tusb_desc_device_t hid_aduio_device_descriptor;
-extern const uint8_t hid_device_audio_configuration_descriptor[];
-extern const uint8_t hid_device_audio_ctrl_report_descriptor[];
+#include <stdbool.h>
 
 /**
- * @brief test audio ctrl
+ * @brief Sends a Consumer Control report that decreases the host volume.
  *
- * @return true
- * @return false
+ * @return true if the report was submitted, otherwise false.
  */
-bool hid_device_audio_ctrl();
+bool hid_device_audio_ctrl(void);

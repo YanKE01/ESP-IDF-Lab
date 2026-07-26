@@ -1,11 +1,12 @@
+#include "esp_err.h"
 #include "esp_log.h"
 #include "esp_private/usb_phy.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "hid_keyboard.h"
+#include "mtp_storage.h"
 #include "tusb.h"
 
-static const char *TAG = "USB KEYBOARD";
+static const char *TAG = "MTP";
 static usb_phy_handle_t s_usb_phy_handle;
 
 static void usb_phy_init(void)
@@ -36,19 +37,31 @@ static void tinyusb_device_task(void *arg)
 
 void tud_mount_cb(void)
 {
-    ESP_LOGI(TAG, "USB device mounted");
+    ESP_LOGI(TAG, "USB MTP device mounted");
 }
 
 void tud_umount_cb(void)
 {
-    ESP_LOGI(TAG, "USB device unmounted");
+    mtp_storage_reset();
+    ESP_LOGI(TAG, "USB MTP device unmounted");
+}
+
+void tud_suspend_cb(bool remote_wakeup_en)
+{
+    (void)remote_wakeup_en;
+    ESP_LOGI(TAG, "USB bus suspended");
+}
+
+void tud_resume_cb(void)
+{
+    ESP_LOGI(TAG, "USB bus resumed");
 }
 
 void app_main(void)
 {
-    ESP_LOGI(TAG, "Initializing USB HID keyboard");
-
+    ESP_ERROR_CHECK(mtp_storage_init());
     usb_phy_init();
+
     if (!tusb_init()) {
         ESP_LOGE(TAG, "TinyUSB initialization failed");
         return;
@@ -57,11 +70,5 @@ void app_main(void)
     BaseType_t task_created = xTaskCreate(tinyusb_device_task, "tinyusb_device", 4096, NULL, 5, NULL);
     if (task_created != pdPASS) {
         ESP_LOGE(TAG, "Failed to create TinyUSB device task");
-        return;
-    }
-
-    while (1) {
-        keyboard_win_test();
-        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
