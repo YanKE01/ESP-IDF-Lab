@@ -1,150 +1,157 @@
+#include <dirent.h>
+#include <errno.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_private/usb_phy.h"
-#include "esp_private/msc_scsi_bot.h"
-#include "usb/usb_host.h"
-#include "usb/msc_host_vfs.h"
-#include "dirent.h"
+#include "usbh_core.h"
 
-static usb_phy_handle_t phy_hdl = NULL;
-static SemaphoreHandle_t ready_to_deinit_usb;
+#define MSC_MOUNT_POINT "/usb"
+#define MSC_DEVNAME     "/dev/sda"
+#define MSC_TEST_FILE   MSC_MOUNT_POINT "/CHERRY.TXT"
+
+#define MSC_EVENT_STARTED      (1UL << 0)
+#define MSC_EVENT_DISCONNECTED (1UL << 1)
+
 static const char *TAG = "MSC_HOST";
-static QueueHandle_t app_queue;
-static msc_host_device_handle_t device;
-static msc_host_vfs_handle_t vfs_handle;
+static TaskHandle_t s_main_task;
 
-static esp_vfs_fat_mount_config_t mount_config = {
-    .format_if_mount_failed = false,
-    .max_files = 3,
-    .allocation_unit_size = 1024,
-};
-
-void usb_host_handle_events(void *args)
+static void list_files(void)
 {
-    uint32_t end_flags = 0;
-    while (1) {
-        uint32_t event_flags = 0;
-        usb_host_lib_handle_events(portMAX_DELAY, &event_flags); // 等待事件
-        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS) {
-            // 所有客户端均被注销
-            ESP_LOGI(TAG, "USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS");
-            usb_host_device_free_all();
-            end_flags |= 1;
-        }
-
-        if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
-            ESP_LOGI(TAG, "USB_HOST_LIB_EVENT_FLAGS_ALL_FREE");
-            end_flags |= 2;
-        }
-
-        if (end_flags == 3) {
-            xSemaphoreGive(ready_to_deinit_usb);
-            break;
-        }
-    }
-    vTaskDelete(NULL);
-}
-
-void usb_host_init()
-{
-    ready_to_deinit_usb = xSemaphoreCreateBinary();
-
-    usb_phy_config_t phy_config = {
-        .controller = USB_PHY_CTRL_OTG,
-        .target = USB_PHY_TARGET_INT, // USB target is internal PHY
-        .otg_mode = USB_OTG_MODE_HOST,
-        .otg_speed = USB_PHY_SPEED_UNDEFINED, // in Host mode, the speed is determined by the connected device
-    };
-    ESP_ERROR_CHECK(usb_new_phy(&phy_config, &phy_hdl));
-
-    usb_host_config_t host_config = {
-        .skip_phy_setup = true,             // 手动配置usb phy，允许用户在调用 usb_host_install() 之前手动配置 USB PHY
-        .intr_flags = ESP_INTR_FLAG_LEVEL1, // 低优先级
-    };
-    ESP_ERROR_CHECK(usb_host_install(&host_config));
-    xTaskCreatePinnedToCore(usb_host_handle_events, "usb host events", 2 * 2048, NULL, 2, NULL, 0);
-}
-
-void usb_host_msc_event_cb(const msc_host_event_t *event, void *arg)
-{
-    if (event->event == MSC_DEVICE_CONNECTED) {
-        ESP_LOGI(TAG, "MSC Device Connected"); // 设备连接
-    } else {
-        ESP_LOGI(TAG, "MSC Device Disconnected"); // 设备无连接
+    DIR *dir = opendir(MSC_MOUNT_POINT);
+    if (dir == NULL) {
+        ESP_LOGE(TAG, "Failed to open %s: %s", MSC_MOUNT_POINT, strerror(errno));
+        return;
     }
 
-    // 队列发送事件
-    xQueueSend(app_queue, event, 10);
+    ESP_LOGI(TAG, "Files in %s:", MSC_MOUNT_POINT);
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        ESP_LOGI(TAG, "  %s", entry->d_name);
+    }
+    closedir(dir);
 }
 
-void usb_host_msc_init()
+static void create_and_read_test_file(void)
 {
-    ready_to_deinit_usb = xSemaphoreCreateBinary();
-    app_queue = xQueueCreate(5, sizeof(msc_host_event_t));
-    usb_phy_config_t phy_config = {
-        .controller = USB_PHY_CTRL_OTG,
-        .target = USB_PHY_TARGET_INT, // 内部Phy
-        .otg_mode = USB_OTG_MODE_HOST,
-        .otg_speed = USB_PHY_SPEED_UNDEFINED, // 取决于设备速度
-    };
-    ESP_ERROR_CHECK(usb_new_phy(&phy_config, &phy_hdl));
+    static const char test_data[] = "Hello from CherryUSB MSC host!\r\n";
 
-    const usb_host_config_t host_config = {
-        .skip_phy_setup = true,
-        .intr_flags = ESP_INTR_FLAG_LEVEL1,
-    };
-    ESP_ERROR_CHECK(usb_host_install(&host_config));
-    xTaskCreatePinnedToCore(usb_host_handle_events, "usb_events", 2 * 2048, NULL, 2, NULL, 0);
+    FILE *file = fopen(MSC_TEST_FILE, "w");
+    if (file == NULL) {
+        ESP_LOGE(TAG, "Failed to create %s: %s", MSC_TEST_FILE, strerror(errno));
+        return;
+    }
 
-    const msc_host_driver_config_t msc_config = {
-        .create_backround_task = true,
-        .callback = usb_host_msc_event_cb,
-        .stack_size = 4096,
-        .task_priority = 5,
-    };
-    ESP_ERROR_CHECK(msc_host_install(&msc_config));
+    size_t written = fwrite(test_data, 1, sizeof(test_data) - 1, file);
+    if (written != sizeof(test_data) - 1) {
+        ESP_LOGE(TAG, "Failed to write %s: wrote %u of %u bytes",
+                 MSC_TEST_FILE, (unsigned)written, (unsigned)(sizeof(test_data) - 1));
+        fclose(file);
+        return;
+    }
+
+    if (fclose(file) != 0) {
+        ESP_LOGE(TAG, "Failed to close %s after writing: %s",
+                 MSC_TEST_FILE, strerror(errno));
+        return;
+    }
+    ESP_LOGI(TAG, "Created %s", MSC_TEST_FILE);
+
+    file = fopen(MSC_TEST_FILE, "r");
+    if (file == NULL) {
+        ESP_LOGE(TAG, "Failed to reopen %s: %s", MSC_TEST_FILE, strerror(errno));
+        return;
+    }
+
+    char read_buffer[128];
+    size_t read_size = fread(read_buffer, 1, sizeof(read_buffer) - 1, file);
+    if (ferror(file)) {
+        ESP_LOGE(TAG, "Failed to read %s", MSC_TEST_FILE);
+        fclose(file);
+        return;
+    }
+    read_buffer[read_size] = '\0';
+    fclose(file);
+
+    ESP_LOGI(TAG, "Read %u bytes from %s: %s",
+             (unsigned)read_size, MSC_TEST_FILE, read_buffer);
 }
 
-void msc_task(void *args)
+static void run_msc_file_test(void)
 {
-    while (1) {
-        // 等待设备连接
-        msc_host_event_t msc_event;
-        xQueueReceive(app_queue, &msc_event, portMAX_DELAY);
-        if (msc_event.event == MSC_DEVICE_CONNECTED) {
-            // 获取MSC设备地址
-            uint8_t device_addr = msc_event.device.address;
-            // 初始化MSC设备
-            ESP_ERROR_CHECK(msc_host_install_device(device_addr, &device));
-            // 挂载虚拟文件系统
-            ESP_ERROR_CHECK(msc_host_vfs_register(device, "/usb", &mount_config, &vfs_handle));
-            ESP_LOGI(TAG, "USB VFS Done");
+    ESP_LOGI(TAG, "MSC interface started, waiting for %s", MSC_MOUNT_POINT);
 
-            // 扫描所有文件
-            DIR *dir = opendir("/usb");
-            if (dir != NULL) {
-                struct dirent *entry;
-                while ((entry = readdir(dir)) != NULL) {
-                    ESP_LOGI(TAG, "%s has file:%s", "/usb", entry->d_name);
-                }
-            } else {
-                break;
-            }
-        } else {
-            ESP_ERROR_CHECK(msc_host_vfs_unregister(vfs_handle));
-            ESP_ERROR_CHECK(msc_host_uninstall_device(device));
+    for (unsigned int retry = 0; retry < 100; retry++) {
+        DIR *dir = opendir(MSC_MOUNT_POINT);
+        if (dir != NULL) {
+            closedir(dir);
+            ESP_LOGI(TAG, "MSC filesystem mounted at %s", MSC_MOUNT_POINT);
+            list_files();
+            create_and_read_test_file();
+            return;
+        }
+
+        uint32_t events = 0;
+        xTaskNotifyWait(0, UINT32_MAX, &events, pdMS_TO_TICKS(100));
+        if (events & MSC_EVENT_DISCONNECTED) {
+            ESP_LOGW(TAG, "USB device disconnected before filesystem mount");
+            return;
         }
     }
 
-    ESP_ERROR_CHECK(msc_host_vfs_unregister(vfs_handle));
-    ESP_ERROR_CHECK(msc_host_uninstall_device(device));
-    vTaskDelete(NULL);
+    ESP_LOGE(TAG, "Timed out waiting for %s", MSC_MOUNT_POINT);
+}
+
+static void usb_host_event_handler(uint8_t busid, uint8_t hub_index, uint8_t hub_port,
+                                   uint8_t intf, uint8_t event)
+{
+    (void)intf;
+
+    switch (event) {
+    case USBH_EVENT_DEVICE_CONNECTED:
+        ESP_LOGI(TAG, "USB device connected: bus=%u, hub=%u, port=%u",
+                 busid, hub_index, hub_port);
+        break;
+    case USBH_EVENT_INTERFACE_START:
+        if (usbh_find_class_instance(MSC_DEVNAME) != NULL) {
+            xTaskNotify(s_main_task, MSC_EVENT_STARTED, eSetBits);
+        }
+        break;
+    case USBH_EVENT_INTERFACE_STOP:
+        xTaskNotify(s_main_task, MSC_EVENT_DISCONNECTED, eSetBits);
+        break;
+    case USBH_EVENT_DEVICE_DISCONNECTED:
+        ESP_LOGI(TAG, "USB device disconnected: bus=%u, hub=%u, port=%u",
+                 busid, hub_index, hub_port);
+        xTaskNotify(s_main_task, MSC_EVENT_DISCONNECTED, eSetBits);
+        break;
+    default:
+        break;
+    }
 }
 
 void app_main(void)
 {
-    usb_host_msc_init();
-    xTaskCreatePinnedToCore(msc_task, "MSC TASK", 2 * 2048, NULL, 5, NULL, 0);
+    /*
+     * app_main already runs in ESP-IDF's main_task. Save its handle for USB
+     * event notifications; no additional application task is created.
+     */
+    s_main_task = xTaskGetCurrentTaskHandle();
+
+    int ret = usbh_initialize(0, ESP_USBH_BASE, usb_host_event_handler);
+    if (ret < 0) {
+        ESP_LOGE(TAG, "CherryUSB host install failed: %d", ret);
+        return;
+    }
+
+    ESP_LOGI(TAG, "CherryUSB host installed");
+
+    uint32_t events = 0;
+    xTaskNotifyWait(0, UINT32_MAX, &events, portMAX_DELAY);
+    if (events & MSC_EVENT_STARTED) {
+        run_msc_file_test();
+    }
 }

@@ -1,8 +1,1 @@
-CONFIG_IDF_TARGET="esp32s3"
-CONFIG_IDF_TARGET_ESP32S3=y
-
-CONFIG_ESP_INT_WDT=n
-CONFIG_ESP_TASK_WDT=n
-
-CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
-CONFIG_ESPTOOLPY_FLASHSIZE="16MB"
+# Target-specific defaults are defined in sdkconfig.defaults.<target>.
