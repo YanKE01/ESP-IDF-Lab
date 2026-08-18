@@ -1,53 +1,59 @@
-idf_version: release-v5.5
+idf_versions:
+  release-v5.5:
+    esp32s3:
+      - examples/algorithm/mfcc
+      - examples/audio/esp_sr
+      - examples/audio/max98357a
+      - examples/audio/record_play
+      - examples/audio/record_save
+      - examples/dl/boston_housing/esp_boston
+      - examples/dl/cifar10/esp_cifar10
+      - examples/dl/mnist/esp_mnist
+      - examples/dl/sin_wave_predict/esp_sin_wave_predict
+      - examples/http/esp_gpt
+      - examples/http/http_aliyun_tongyiqianwen
+      - examples/http/http_baidu_access_token
+      - examples/http/http_baidu_img_classification
+      - examples/http/http_baidu_speech_recognition
+      - examples/http/http_baidu_tts
+      - examples/http/http_kimi
+      - examples/http/http_xunfei_xinghuo
+      - examples/peripherals/can/can_alert
+      - examples/peripherals/can/can_simple_test
+      - examples/peripherals/gpio/gpio_flip
+      - examples/peripherals/i2c/i2c_bus
+      - examples/peripherals/lcd/lcd_jpg
+      - examples/peripherals/lcd/oled
+      - examples/peripherals/pcnt/basic_pcnt
+      - examples/peripherals/pwm/complementary_pwm
+      - examples/peripherals/rmt/rmt_simple_tx
+      - examples/peripherals/rmt/ws2812_simple_encoder
+      - examples/peripherals/spi/spi_basic
+      - examples/protocols/json
+      - examples/protocols/modbus/master/modbus_serial_master
+      - examples/protocols/modbus/slave/modbus_serial_slave
+      - examples/protocols/protobuf
+      - examples/protocols/protobuf_c
+      - examples/ui/lvgl/lcd_camera_lvgl
+      - examples/ui/lvgl/lvgl_spiffs
+      - examples/ui/wououi
+      - examples/usb/device/bulk_trans
+      - examples/usb/device/cdc_acm
+      - examples/usb/device/hid_device_audio_ctrl
+      - examples/usb/device/hid_device_keyboard
+      - examples/usb/device/win_usb
+      - examples/usb/host/msc_host
 
-targets:
-  esp32s3:
-    - examples/algorithm/mfcc
-    - examples/audio/esp_sr
-    - examples/audio/max98357a
-    - examples/audio/record_play
-    - examples/audio/record_save
-    - examples/dl/boston_housing/esp_boston
-    - examples/dl/cifar10/esp_cifar10
-    - examples/dl/mnist/esp_mnist
-    - examples/dl/sin_wave_predict/esp_sin_wave_predict
-    - examples/http/esp_gpt
-    - examples/http/http_aliyun_tongyiqianwen
-    - examples/http/http_baidu_access_token
-    - examples/http/http_baidu_img_classification
-    - examples/http/http_baidu_speech_recognition
-    - examples/http/http_baidu_tts
-    - examples/http/http_kimi
-    - examples/http/http_xunfei_xinghuo
-    - examples/peripherals/can/can_alert
-    - examples/peripherals/can/can_simple_test
-    - examples/peripherals/gpio/gpio_flip
-    - examples/peripherals/i2c/i2c_bus
-    - examples/peripherals/lcd/lcd_jpg
-    - examples/peripherals/lcd/oled
-    - examples/peripherals/pcnt/basic_pcnt
-    - examples/peripherals/pwm/complementary_pwm
-    - examples/peripherals/rmt/rmt_simple_tx
-    - examples/peripherals/rmt/ws2812_simple_encoder
-    - examples/peripherals/spi/spi_basic
-    - examples/protocols/json
-    - examples/protocols/modbus/master/modbus_serial_master
-    - examples/protocols/modbus/slave/modbus_serial_slave
-    - examples/protocols/protobuf
-    - examples/protocols/protobuf_c
-    - examples/ui/lvgl/lcd_camera_lvgl
-    - examples/ui/lvgl/lvgl_spiffs
-    - examples/ui/wououi
-    - examples/usb/device/bulk_trans
-    - examples/usb/device/cdc_acm
-    - examples/usb/device/hid_device_audio_ctrl
-    - examples/usb/device/hid_device_keyboard
-    - examples/usb/device/win_usb
-    - examples/usb/host/msc_host
+    esp32p4:
+      - examples/peripherals/sdmmc/sdcard_performance
+      - examples/usb/device/mtp
 
-  esp32p4:
-    - examples/peripherals/sdmmc/sdcard_performance
-    - examples/usb/device/mtp
+    esp32c5:
+      - examples/audio/ns4150_player
 
-  esp32c5:
-    - examples/audio/ns4150_player
+  release-v6.1:
+    esp32p4:
+      - examples/usb/host/signal_quality_test
+
+    esp32s31:
+      - examples/usb/host/signal_quality_test

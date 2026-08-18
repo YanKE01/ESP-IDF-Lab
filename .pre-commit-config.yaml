@@ -53,3 +53,13 @@ repos:
         args:
           - --subject-min-length=15
           - --body-max-line-length=200
+
+  - repo: local
+    hooks:
+      - id: validate-build-config
+        name: Validate ESP-IDF build matrix configuration
+        entry: python tools/ci/generate_build_matrix.py --check
+        language: python
+        additional_dependencies: ['PyYAML==6.0.2']
+        pass_filenames: false
+        files: ^(build_config\.yml|tools/ci/generate_build_matrix\.py|\.github/workflows/build\.yml)$
