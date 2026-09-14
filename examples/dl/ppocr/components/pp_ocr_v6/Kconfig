@@ -1,0 +1,33 @@
+menu "models: pp_ocr_v6"
+    comment "DET_S8 + REC_S8 (48x320), embedded in flash rodata"
+
+    # Keep the configuration interface used by the OCR pipeline, with only
+    # the models bundled in main/models enabled.
+    config FLASH_PP_OCR_V6_REC_S8
+        bool
+        default y
+
+    config PP_OCR_V6_REC_S8
+        bool
+        default y
+
+    config DEFAULT_PP_OCR_V6_REC_MODEL
+        int
+        default 0
+
+    config PP_OCR_V6_REC_MODE_SHORT
+        bool
+        default y
+
+    config PP_OCR_V6_REC_MODE
+        int
+        default 0
+
+    config PP_OCR_V6_MODEL_IN_FLASH_RODATA
+        bool
+        default y
+
+    config PP_OCR_V6_MODEL_LOCATION
+        int
+        default 0
+endmenu
