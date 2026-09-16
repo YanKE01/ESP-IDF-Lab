@@ -1,0 +1,5 @@
+version: "0.1.0"
+license: "MIT"
+description: PP-OCRv6 pipeline using the application's local model files.
+dependencies:
+  espressif/esp-dl: "3.3.11"

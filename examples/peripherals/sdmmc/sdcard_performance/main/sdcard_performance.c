@@ -1,4 +1,4 @@
-/* SD card (SDMMC slot 0) performance test for ESP32-P4
+/* SD card (SDMMC slot 0) performance test for ESP32-P4 and ESP32-S31
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -21,6 +21,16 @@
 #include "sdmmc_cmd.h"
 #include "driver/sdmmc_host.h"
 #include "sd_pwr_ctrl_by_on_chip_ldo.h"
+#include "sdkconfig.h"
+#include "soc/soc_caps.h"
+
+#if CONFIG_IDF_TARGET_ESP32P4
+#define SD_PWR_LDO_CHANNEL 4
+#elif CONFIG_IDF_TARGET_ESP32S31
+#define SD_PWR_LDO_CHANNEL 1
+#else
+#error "This example supports ESP32-P4 and ESP32-S31 only"
+#endif
 
 static const char *TAG = "sdcard_perf";
 
@@ -32,7 +42,7 @@ static const char *TAG = "sdcard_perf";
 static sdmmc_card_t *s_card = NULL;
 
 /* Mount the SD card on SDMMC slot 0 in UHS-I SDR50 mode.
- * All IOs are hardcoded for the ESP32-P4 SD card slot (powered by on-chip LDO VO4). */
+ * Use the target's default slot 0 IOs and on-chip LDO for SDMMC IO power. */
 static esp_err_t sd_card_mount(void)
 {
     esp_err_t ret;
@@ -50,15 +60,21 @@ static esp_err_t sd_card_mount(void)
     host.slot = SDMMC_HOST_SLOT_0;
     host.max_freq_khz = SDMMC_FREQ_SDR50;
     host.flags &= ~SDMMC_HOST_FLAG_DDR;
+#if SOC_SDMMC_IO_UHS_POWER_EXTERNAL
+    /* ESP32-S31 uses a separate 1.8 V IO supply for UHS-I operation. */
+    host.io_voltage = 1.8f;
+#endif
+#if CONFIG_IDF_TARGET_ESP32P4
     /* Input sampling delay phase: with the default PHASE_0 (no delay), reads at
      * 100MHz (SDR50) are prone to intermittent CRC errors (0x109).
      * NOTE: SDMMC_DELAY_PHASE_AUTO is not supported on IDF v5.5, so pick a fixed
      * phase manually -- if CRC errors still show up, try PHASE_2 / PHASE_3. */
     host.input_delay_phase = SDMMC_DELAY_PHASE_1;
+#endif
 
-    /* SD card is powered by the on-chip LDO (VO4 on ESP32-P4-Function-EV-Board) */
+    /* LDO VO4 on ESP32-P4, LDO VO1 on ESP32-S31. */
     sd_pwr_ctrl_ldo_config_t ldo_config = {
-        .ldo_chan_id = 4,
+        .ldo_chan_id = SD_PWR_LDO_CHANNEL,
     };
     sd_pwr_ctrl_handle_t pwr_ctrl_handle = NULL;
     ret = sd_pwr_ctrl_new_on_chip_ldo(&ldo_config, &pwr_ctrl_handle);
@@ -68,16 +84,10 @@ static esp_err_t sd_card_mount(void)
     }
     host.pwr_ctrl_handle = pwr_ctrl_handle;
 
-    /* Fixed IOs: ESP32-P4 SD card slot */
+    /* The IDF defaults select the target's slot 0 IOMUX pins. */
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
     slot_config.flags |= SDMMC_SLOT_FLAG_UHS1 | SDMMC_SLOT_FLAG_INTERNAL_PULLUP;
     slot_config.width = 4;
-    slot_config.clk = GPIO_NUM_43;
-    slot_config.cmd = GPIO_NUM_44;
-    slot_config.d0 = GPIO_NUM_39;
-    slot_config.d1 = GPIO_NUM_40;
-    slot_config.d2 = GPIO_NUM_41;
-    slot_config.d3 = GPIO_NUM_42;
 
     ESP_LOGI(TAG, "Mounting filesystem at %s", SD_MOUNT_POINT);
     ret = esp_vfs_fat_sdmmc_mount(SD_MOUNT_POINT, &host, &slot_config, &mount_config, &card);
