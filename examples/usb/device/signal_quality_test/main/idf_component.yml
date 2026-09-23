@@ -1,0 +1,7 @@
+## IDF Component Manager Manifest File
+target:
+  - esp32s31
+  - esp32p4
+dependencies:
+  espressif/esp_tinyusb:
+    version: "2.0.1~1"
