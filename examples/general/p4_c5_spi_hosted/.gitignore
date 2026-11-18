@@ -1,0 +1,5 @@
+cp/build/
+cp/sdkconfig
+cp/sdkconfig.old
+cp/managed_components/
+cp/dependencies.lock

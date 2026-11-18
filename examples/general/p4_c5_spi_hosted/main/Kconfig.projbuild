@@ -1,0 +1,15 @@
+menu "Example Configuration"
+
+    config APP_WIFI_SSID
+        string "Wi-Fi SSID"
+        default "myssid"
+
+    config APP_WIFI_PASSWORD
+        string "Wi-Fi password"
+        default "mypassword"
+
+    config APP_WIFI_MAX_RETRY
+        int "Maximum retry"
+        default 5
+
+endmenu
