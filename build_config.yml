@@ -45,6 +45,7 @@ idf_versions:
       - examples/usb/host/msc_host
 
     esp32p4:
+      - examples/algorithm/mfcc
       - examples/peripherals/sdmmc/sdcard_performance
       - examples/usb/device/mtp
 
