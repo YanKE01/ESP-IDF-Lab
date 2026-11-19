@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/images/banner.svg" alt="ESP-IDF Lab" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-dark.svg">
+    <img src="docs/images/banner-light.svg" alt="ESP-IDF Lab" width="100%">
+  </picture>
 </p>
 
 <p align="center">
@@ -16,7 +19,10 @@
 `esp-idf-lab` 是一个基于 ESP-IDF 的实践项目集合，包含用于学习 ESP 系列芯片功能的实验和参考实现。每个示例都是独立的 ESP-IDF 工程，可以单独编译和烧录。
 
 <p align="center">
-  <img src="docs/images/categories.svg" alt="示例分类" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/categories-dark.svg">
+    <img src="docs/images/categories-light.svg" alt="示例分类" width="100%">
+  </picture>
 </p>
 
 ## 快速开始

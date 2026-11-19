@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/images/banner.svg" alt="ESP-IDF Lab" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-dark.svg">
+    <img src="docs/images/banner-light.svg" alt="ESP-IDF Lab" width="100%">
+  </picture>
 </p>
 
 <p align="center">
@@ -16,7 +19,10 @@
 `esp-idf-lab` is a collection of practical experiments and reference projects for learning ESP chip features with ESP-IDF. Every example is a standalone ESP-IDF project that you can build and flash on its own.
 
 <p align="center">
-  <img src="docs/images/categories.svg" alt="Example categories" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/categories-dark.svg">
+    <img src="docs/images/categories-light.svg" alt="Example categories" width="100%">
+  </picture>
 </p>
 
 ## Quick Start
