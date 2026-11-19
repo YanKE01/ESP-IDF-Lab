@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-label="Example categories">
+<style>.t{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
+<rect width="1200" height="560" rx="20" fill="#0f172a"/>
+<text x="24" y="42" class="t" font-size="22" font-weight="700" fill="#f8fafc">Example categories</text>
+<text x="1176" y="42" text-anchor="end" class="m" font-size="15" fill="#94a3b8">examples/&lt;category&gt;/</text>
+<g transform="translate(24 64)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#8b5cf6"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Deep Learning</text>
+<text x="22" y="56" class="m" font-size="13" fill="#8b5cf6">dl/</text>
+<circle cx="246" cy="30" r="17" fill="#8b5cf6" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#8b5cf6">5</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• MNIST · CIFAR-10</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• PP-OCR text recognition</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• Boston housing · sine</text>
+</g>
+<g transform="translate(320 64)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#3b82f6"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">USB</text>
+<text x="22" y="56" class="m" font-size="13" fill="#3b82f6">usb/</text>
+<circle cx="246" cy="30" r="17" fill="#3b82f6" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#3b82f6">11</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• HID · CDC · MTP</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• WinUSB · WebUSB</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• Signal quality test</text>
+</g>
+<g transform="translate(616 64)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#10b981"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Peripherals</text>
+<text x="22" y="56" class="m" font-size="13" fill="#10b981">peripherals/</text>
+<circle cx="246" cy="30" r="17" fill="#10b981" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#10b981">13</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• LCD · OLED · SPI · I2C</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• CAN · RMT · PCNT · PWM</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• SD card performance</text>
+</g>
+<g transform="translate(912 64)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#f59e0b"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Cloud &amp; LLM</text>
+<text x="22" y="56" class="m" font-size="13" fill="#f59e0b">http/</text>
+<circle cx="246" cy="30" r="17" fill="#f59e0b" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#f59e0b">8</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• Kimi · Qwen · Spark</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• Baidu ASR / TTS</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• Image classification</text>
+</g>
+<g transform="translate(24 234)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#ec4899"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Audio</text>
+<text x="22" y="56" class="m" font-size="13" fill="#ec4899">audio/</text>
+<circle cx="246" cy="30" r="17" fill="#ec4899" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#ec4899">5</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• I2S playback / record</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• ESP-SR voice control</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• NS4150 player (C5)</text>
+</g>
+<g transform="translate(320 234)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#14b8a6"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Protocols</text>
+<text x="22" y="56" class="m" font-size="13" fill="#14b8a6">protocols/</text>
+<circle cx="246" cy="30" r="17" fill="#14b8a6" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#14b8a6">5</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• JSON</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• Protobuf (nanopb / C)</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• Modbus master / slave</text>
+</g>
+<g transform="translate(616 234)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#6366f1"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">UI &amp; Graphics</text>
+<text x="22" y="56" class="m" font-size="13" fill="#6366f1">ui/</text>
+<circle cx="246" cy="30" r="17" fill="#6366f1" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#6366f1">3</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• LVGL + LCD</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• LVGL + camera</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• WouoUI</text>
+</g>
+<g transform="translate(912 234)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#ef4444"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">PIE / SIMD</text>
+<text x="22" y="56" class="m" font-size="13" fill="#ef4444">pie/</text>
+<circle cx="246" cy="30" r="17" fill="#ef4444" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#ef4444">4</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• Assembly instructions</text>
+<text x="22" y="108" class="t" font-size="14" fill="#cbd5e1">• Vector math</text>
+<text x="22" y="130" class="t" font-size="14" fill="#cbd5e1">• Memory ops</text>
+</g>
+<g transform="translate(24 404)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#0ea5e9"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">General</text>
+<text x="22" y="56" class="m" font-size="13" fill="#0ea5e9">general/</text>
+<circle cx="246" cy="30" r="17" fill="#0ea5e9" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#0ea5e9">1</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• HTTPS speed test</text>
+</g>
+<g transform="translate(320 404)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#64748b"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">System</text>
+<text x="22" y="56" class="m" font-size="13" fill="#64748b">system/</text>
+<circle cx="246" cy="30" r="17" fill="#64748b" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#64748b">2</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• Build for two targets</text>
+</g>
+<g transform="translate(616 404)">
+<rect width="276" height="150" rx="14" fill="#1e293b" stroke="#334155"/>
+<rect x="0" y="0" width="6" height="150" rx="3" fill="#a855f7"/>
+<text x="22" y="34" class="t" font-size="19" font-weight="700" fill="#f8fafc">Algorithm</text>
+<text x="22" y="56" class="m" font-size="13" fill="#a855f7">algorithm/</text>
+<circle cx="246" cy="30" r="17" fill="#a855f7" opacity="0.18"/>
+<text x="246" y="36" text-anchor="middle" class="t" font-size="16" font-weight="700" fill="#a855f7">1</text>
+<text x="22" y="86" class="t" font-size="14" fill="#cbd5e1">• MFCC features</text>
+</g>
+<g transform="translate(912 404)"><rect width="276" height="150" rx="14" fill="none" stroke="#475569" stroke-dasharray="6 6"/><text x="138.0" y="62" text-anchor="middle" class="t" font-size="34" font-weight="800" fill="#f97316">50+</text><text x="138.0" y="92" text-anchor="middle" class="t" font-size="15" fill="#cbd5e1">buildable example projects</text><text x="138.0" y="116" text-anchor="middle" class="m" font-size="13" fill="#94a3b8">ESP-IDF v5.5 · v6.1</text></g>
+</svg>
