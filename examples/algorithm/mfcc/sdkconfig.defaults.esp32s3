@@ -1,0 +1,3 @@
+# Run the CPU at full speed so the benchmark numbers are comparable
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y

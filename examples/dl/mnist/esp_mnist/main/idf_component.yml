@@ -1,10 +1,10 @@
 ## IDF Component Manager Manifest File
 dependencies:
-  espressif/esp-tflite-micro: "^1.3.0"
+  espressif/esp-tflite-micro: "1.4.*"
   espressif/esp_jpeg: "^1.0.5~2"
   ## Required IDF version
   idf:
-    version: ">=4.1.0"
+    version: ">=5.1"
   # # Put list of dependencies here
   # # For components maintained by Espressif:
   # component: "~1.0.0"
